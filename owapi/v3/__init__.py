@@ -106,6 +106,8 @@ async def get_stats(ctx: HTTPRequestContext, battletag: str):
         }
 
         d["stats"]["quickplay"] = parsing.bl_parse_stats(result, status=status)
+        print(result)
+        print(type(result))
         d["stats"]["competitive"] = parsing.bl_parse_stats(result, mode="competitive", status=status)
 
         built_dict[region] = d

@@ -67,9 +67,15 @@ def bl_parse_stats(parsed, mode="quickplay", status=None):
 
     # Shortcut location for player level etc
     if status:
-        mast_head = parsed.xpath(".//div[@class='masthead-player']")
-    else:
-        mast_head = parsed.xpath(".//div[@class='masthead-player']")[0]
+        hasrank = mast_head.findall(".//div[@class='competitive-rank']/div")
+        if hasrank:
+            comprank = int(hasrank[0].text)
+        else:
+            comprank = None
+        built_dict["overall_stats"]["comprank"] = comprank
+        return built_dict
+
+    mast_head = parsed.xpath(".//div[@class='masthead-player']")[0]
 
     # Get the prestige.
     prestige = mast_head.xpath(".//div[@class='player-level']")[0]
