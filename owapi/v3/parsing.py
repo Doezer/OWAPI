@@ -67,6 +67,7 @@ def bl_parse_stats(parsed, mode="quickplay"):
 
     # Shortcut location for player level etc
     mast_head = parsed.xpath(".//div[@class='masthead-player']")[0]
+    mast_head = ""
 
     # Get the prestige.
     prestige = mast_head.xpath(".//div[@class='player-level']")[0]
