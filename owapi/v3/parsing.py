@@ -68,6 +68,7 @@ def bl_parse_stats(parsed, mode="quickplay", status=None):
     # Shortcut location for player level etc
     if status:
         hasrank = parsed.xpath(".//div[@class='masthead-player-progression']/div[@class='competitive-rank']/div")
+        hasrank = parsed.xpath('//*[@id="overview-section"]/div/div/div/div/div[2]/div/div[3]/div')
         if hasrank:
             comprank = int(hasrank[0].text)
         else:
