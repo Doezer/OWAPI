@@ -72,7 +72,6 @@ def bl_parse_stats(parsed, mode="quickplay", status=None):
             comprank = int(hasrank[0].text)
         else:
             comprank = None
-        print(comprank)
         built_dict["overall_stats"]["comprank"] = comprank
         return built_dict
 
