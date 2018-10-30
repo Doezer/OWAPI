@@ -66,16 +66,18 @@ def bl_parse_stats(parsed, mode="quickplay", status=None):
     # Start the dict.
     built_dict = {"game_stats": [], "overall_stats": {}, "average_stats": []}
 
-    # Shortcut location for player level etc
-    if not status or status.lower() != "public profile":
-        hasrank = parsed.xpath('//*[@id="overview-section"]/div/div/div/div/div[2]/div/div[3]/div')
-        if hasrank:
-            comprank = int(hasrank[0].text)
-        else:
-            comprank = None
-        built_dict["overall_stats"]["comprank"] = comprank
-        return built_dict
+    # NOTE: Snippet used back when rank was displayed even on private profiles
 
+    # if not status or status.lower() != "public profile":
+    #     hasrank = parsed.xpath('//*[@id="overview-section"]/div/div/div/div/div[2]/div/div[3]/div')
+    #     if hasrank:
+    #         comprank = int(hasrank[0].text)
+    #     else:
+    #         comprank = None
+    #     built_dict["overall_stats"]["comprank"] = comprank
+    #     return built_dict
+
+    # Shortcut location for player level etc
     mast_head = parsed.xpath(".//div[@class='masthead-player']")[0]
 
     # Get the prestige.
