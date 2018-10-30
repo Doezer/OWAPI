@@ -6,7 +6,7 @@ component:
   # Is caching via redis enabled?
   # This will speed up the API massively for subsequent requests, but data will be stale for 300 seconds.
   # Set to False to disable.
-  use_redis: False
+  use_redis: True
 
   # Enable profiling?
   # This is only recommended for developers.

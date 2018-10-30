@@ -1,1 +1,1 @@
-worker: PYTHONPATH=. pipenv run asphalt run config.yml
+web: PYTHONPATH=. pipenv run asphalt run config.yml

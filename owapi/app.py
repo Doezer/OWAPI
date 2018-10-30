@@ -125,7 +125,8 @@ class APIComponent(ContainerComponent):
         app.config["owapi_cache_time"] = cache_time
 
     async def start(self, ctx):
-        self.add_component('kyoukai', KyoukaiComponent, ip="127.0.0.1", port=4444,
+        port_bind = os.environ('PORT')
+        self.add_component('kyoukai', KyoukaiComponent, ip="127.0.0.1", port=port_bind,
                            app="app:app", template_renderer=None)
         ctx.session = ClientSession(headers={"User-Agent": "owapi scraper/1.0.1"},
                                     request_class=AiohttpHackyClientRequest)
