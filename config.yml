@@ -33,7 +33,7 @@ component:
       # The IP for Kyoukai to bind to.
       ip: 127.0.0.1
       # The port for Kyoukai to bind to.
-      port: 80
+      port: $PORT
     # The redis component.
     # This is ignored if `use_redis` is set to False.
     redis:
