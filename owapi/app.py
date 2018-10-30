@@ -126,7 +126,7 @@ class APIComponent(ContainerComponent):
 
     async def start(self, ctx):
         port_bind = os.environ['PORT']
-        self.add_component('kyoukai', KyoukaiComponent, ip="127.0.0.1", port=port_bind,
+        self.add_component('kyoukai', KyoukaiComponent, ip="0.0.0.0", port=port_bind,
                            app="app:app", template_renderer=None)
         ctx.session = ClientSession(headers={"User-Agent": "owapi scraper/1.0.1"},
                                     request_class=AiohttpHackyClientRequest)
