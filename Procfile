@@ -1,1 +1,1 @@
-worker: python -O main.py
+worker: PYTHONPATH=. pipenv run asphalt run config.yml
