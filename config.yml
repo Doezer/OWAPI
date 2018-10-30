@@ -40,7 +40,7 @@ component:
       connections:
         redis:
           # The address of your Redis server.
-          address: h:p1b805db53b06f696b21cf22540e54d8a6af7e7871c88ab7e218a4456c5c0082a@ec2-34-247-199-66.eu-west-1.compute.amazonaws.com:
+          address: h@ec2-34-247-199-66.eu-west-1.compute.amazonaws.com:
           # The port of your Redis server.
           port: 17189
           # The database to connect to on Redis.
