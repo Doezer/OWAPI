@@ -66,7 +66,7 @@ def bl_parse_stats(parsed, mode="quickplay", status=None):
     # Start the dict.
     built_dict = {"game_stats": [], "overall_stats": {}, "average_stats": []}
 
-    # NOTE: Snippet used back when rank was displayed even on private profiles
+    # NOTE: Snippet used back when rank was displayed even on private profiles. 'status' is sent by __init__ methods.
 
     # if not status or status.lower() != "public profile":
     #     hasrank = parsed.xpath('//*[@id="overview-section"]/div/div/div/div/div[2]/div/div[3]/div')
@@ -191,16 +191,7 @@ def bl_parse_stats(parsed, mode="quickplay", status=None):
         )[0]
 
     # Highlight specific stat groups.
-    try:
-        game_box = stat_groups[5]
-    except IndexError:
-        try:
-            game_box = stat_groups[4]
-        except IndexError:
-            # edge cases...
-            # we can't really extract any more stats
-            # so we do an early return
-            return {}
+    game_box = stat_groups.xpath(".//h5/text()[. = 'Game']/../../../../..")
 
     # Calculate the wins, losses, and win rate.
     try:
