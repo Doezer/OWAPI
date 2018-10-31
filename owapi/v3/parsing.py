@@ -261,6 +261,9 @@ def bl_parse_stats(parsed, mode="quickplay", status=None):
                 # 2017-08-03 - calculate rolling averages.
                 name = name.lower().replace("_avg_per_10_min", "")
                 rolling_average_stats[name] = nvl
+            elif 'time_played' in name.lower():
+                # Blizzard has put thousands separator #254
+                game_stats[name] = nvl.replace(",", "")
             else:
                 game_stats[name] = nvl
 
