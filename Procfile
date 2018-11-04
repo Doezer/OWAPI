@@ -1,0 +1,1 @@
+web: PYTHONPATH=. pipenv run asphalt run config.yml

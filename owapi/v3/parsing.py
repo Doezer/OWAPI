@@ -33,17 +33,18 @@ hero_data_div_ids = {
     "orisa": "0x02E000000000013E",
     "doomfist": "0x02E000000000012F",
     "moira": "0x02E00000000001A2",
-    "brigitte": "0x02E0000000000195"
+    "brigitte": "0x02E0000000000195",
+    "wrecking_ball": "0x02E00000000001CA"
 }
 
 tier_data_img_src = {
-    "rank-1.png": "bronze",
-    "rank-2.png": "silver",
-    "rank-3.png": "gold",
-    "rank-4.png": "platinum",
-    "rank-5.png": "diamond",
-    "rank-6.png": "master",
-    "rank-7.png": "grandmaster"
+    "rank-BronzeTier.png": "bronze",
+    "rank-SilverTier.png": "silver",
+    "rank-GoldTier.png": "gold",
+    "rank-PlatinumTier.png": "platinum",
+    "rank-DiamondTier.png": "diamond",
+    "rank-MasterTier.png": "master",
+    "rank-GrandmasterTier.png": "grandmaster"
 }
 
 
@@ -64,6 +65,17 @@ def bl_parse_stats(parsed, mode="quickplay", status=None):
 
     # Start the dict.
     built_dict = {"game_stats": [], "overall_stats": {}, "average_stats": []}
+
+    # NOTE: Snippet used back when rank was displayed even on private profiles. 'status' is sent by __init__ methods.
+
+    # if not status or status.lower() != "public profile":
+    #     hasrank = parsed.xpath('//*[@id="overview-section"]/div/div/div/div/div[2]/div/div[3]/div')
+    #     if hasrank:
+    #         comprank = int(hasrank[0].text)
+    #     else:
+    #         comprank = None
+    #     built_dict["overall_stats"]["comprank"] = comprank
+    #     return built_dict
 
     # Shortcut location for player level etc
     if status:
@@ -102,6 +114,38 @@ def bl_parse_stats(parsed, mode="quickplay", status=None):
     level = int(prestige.findall(".//div")[0].text)
     built_dict["overall_stats"]["level"] = level
 
+    # Get and parse out endorsement level.
+    endorsement = mast_head.xpath(".//div[@class='endorsement-level']")[0]
+    built_dict["overall_stats"]["endorsement_level"] = int(endorsement.findall(".//div[@class='u-center']")[0].text)
+
+    # Get endorsement circle.
+    endorsement_icon_inner = mast_head.xpath(".//div[@class='endorsement-level']/div[@class='EndorsementIcon']/div[@class='EndorsementIcon-inner']")[0]
+
+    # Get individual endorsement segments.
+    try:
+        endorsement_shotcaller_image = endorsement_icon_inner.findall(".//svg[@class='EndorsementIcon-border EndorsementIcon-border--shotcaller']")[0]
+        endorsement_shotcaller_level = endorsement_shotcaller_image.get('data-value')
+    except:
+        endorsement_shotcaller_level = 0
+
+    try:
+        endorsement_teammate_image = endorsement_icon_inner.findall(".//svg[@class='EndorsementIcon-border EndorsementIcon-border--teammate']")[0]
+        endorsement_teammate_level = endorsement_teammate_image.get('data-value')
+    except:
+        endorsement_teammate_level = 0
+
+    try:
+        endorsement_sportsmanship_image = endorsement_icon_inner.findall(".//svg[@class='EndorsementIcon-border EndorsementIcon-border--sportsmanship']")[0]
+        endorsement_sportsmanship_level = endorsement_sportsmanship_image.get('data-value')
+    except:
+        endorsement_sportsmanship_level = 0    
+
+    # Parse out endorsement segements.
+    built_dict["overall_stats"]["endorsement_shotcaller"] = endorsement_shotcaller_level
+    built_dict["overall_stats"]["endorsement_teammate"] = endorsement_teammate_level
+    built_dict["overall_stats"]["endorsement_sportsmanship"] = endorsement_sportsmanship_level
+
+    # Get comp rank.
     try:
         tier = mast_head.xpath(".//div[@class='competitive-rank']/img")[0]
         img_src = [x for x in tier.values() if 'rank-icons' in x][0]
@@ -156,16 +200,7 @@ def bl_parse_stats(parsed, mode="quickplay", status=None):
         )[0]
 
     # Highlight specific stat groups.
-    try:
-        game_box = stat_groups[5]
-    except IndexError:
-        try:
-            game_box = stat_groups[4]
-        except IndexError:
-            # edge cases...
-            # we can't really extract any more stats
-            # so we do an early return
-            return {}
+    game_box = stat_groups.xpath(".//h5/text()[. = 'Game']/../../../../..")
 
     # Calculate the wins, losses, and win rate.
     try:
@@ -235,6 +270,9 @@ def bl_parse_stats(parsed, mode="quickplay", status=None):
                 # 2017-08-03 - calculate rolling averages.
                 name = name.lower().replace("_avg_per_10_min", "")
                 rolling_average_stats[name] = nvl
+            elif 'time_played' in name.lower():
+                # Blizzard has put thousands separator #254
+                game_stats[name] = nvl.replace(",", "")
             else:
                 game_stats[name] = nvl
 

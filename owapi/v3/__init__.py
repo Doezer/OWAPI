@@ -57,7 +57,7 @@ async def get_blob(ctx: HTTPRequestContext, battletag: str):
             continue
 
         status = result.xpath(".//p[@class='masthead-permission-level-text']")[0].text
-        if status == "Private Profile":
+        if "private" in status.lower():
             return {"error": "Private"}, 403
 
         d = {"heroes": {"playtime": {"competitive": {}, "quickplay": {}},
@@ -65,8 +65,9 @@ async def get_blob(ctx: HTTPRequestContext, battletag: str):
              "stats": {},
              "achievements": {}}
 
-        d["stats"]["quickplay"] = parsing.bl_parse_stats(result)
-        d["stats"]["competitive"] = parsing.bl_parse_stats(result, mode="competitive")
+        d["stats"]["quickplay"] = parsing.bl_parse_stats(result, status=status)
+        d["stats"]["competitive"] = parsing.bl_parse_stats(result, mode="competitive",
+                                                           status=status)
 
         d["heroes"]["stats"]["quickplay"] = parsing.bl_parse_hero_data(result)
         d["heroes"]["playtime"]["quickplay"] = parsing.bl_parse_all_heroes(result)
@@ -98,8 +99,8 @@ async def get_stats(ctx: HTTPRequestContext, battletag: str):
             continue
 
         status = result.xpath(".//p[@class='masthead-permission-level-text']")[0].text
-        # if status == "Private Profile":
-        #     return {"error": "Private"}, 403
+        if "private" in status.lower():
+            return {"error": "Private"}, 403
 
         d = {
             "stats": {},
@@ -129,7 +130,7 @@ async def get_heroes(ctx: HTTPRequestContext, battletag: str):
             continue
 
         status = result.xpath(".//p[@class='masthead-permission-level-text']")[0].text
-        if status == "Private Profile":
+        if "private" in status.lower():
             return {"error": "Private"}, 403
 
         d = {
@@ -166,7 +167,7 @@ async def get_heroes_qp(ctx: HTTPRequestContext, battletag: str):
             continue
 
         status = result.xpath(".//p[@class='masthead-permission-level-text']")[0].text
-        if status == "Private Profile":
+        if "private" in status.lower():
             return {"error": "Private"}, 403
 
         d = {
@@ -199,7 +200,7 @@ async def get_heroes_comp(ctx: HTTPRequestContext, battletag: str):
             continue
 
         status = result.xpath(".//p[@class='masthead-permission-level-text']")[0].text
-        if status == "Private Profile":
+        if "private" in status.lower():
             return {"error": "Private"}, 403
 
         d = {
@@ -243,7 +244,7 @@ async def get_achievements(ctx: HTTPRequestContext, battletag: str):
             continue
 
         status = result.xpath(".//p[@class='masthead-permission-level-text']")[0].text
-        if status == "Private Profile":
+        if "private" in status.lower():
             return {"error": "Private"}, 403
 
         d = {"achievements": parsing.bl_parse_achievement_data(result)}
