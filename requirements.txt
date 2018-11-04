@@ -1,7 +1,0 @@
-aioredis
-unidecode
-lxml
-werkzeug
-kyoukai
-asphalt
-aiohttp
